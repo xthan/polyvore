@@ -20,13 +20,13 @@ Contact: xintong@umd.edu
 
 ### Prepare the Training Data
 Download the dataset and put it in the ./data folder:
-0. Decompress polyvore.tar.gz into ./data/label/
-1. Decompress plyvore-images.tar.gz to ./data/, so all outfit folders are in ./data/images
-2. Run the following commands to generate TFRecords:
-```shell
-./prepare_data.sh 
-```
 
+0. Decompress polyvore.tar.gz into ./data/label/
+1. Decompress plyvore-images.tar.gz to ./data/, so all outfit image folders are in ./data/images/
+2. Run the following commands to generate TFRecords in ./data/tf_records/:
+```
+python data/build_polyvore_data.py
+```
 
 ### Download the Inception v3 Checkpoint
 
@@ -46,6 +46,18 @@ wget "http://download.tensorflow.org/models/inception_v3_2016_08_28.tar.gz"
 tar -xvf "inception_v3_2016_08_28.tar.gz" -C ${INCEPTION_DIR}
 rm "inception_v3_2016_08_28.tar.gz"
 ```
+### Training
+```shell
+./train.sh
+```
+The models will be saved in model/bi_lstm
+
+### Todo List
+- [ ] Add multiple choice inference code.
+- [ ] Add compatibility prediction inference code.
+- [ ] Add image outfit generation code.
+- [ ] Release trained models.
+- [ ] Get rid of older version TF APIs like tf.slice to make the code easier to read (low priority). 
 
 
 ### Citation
