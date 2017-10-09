@@ -15,8 +15,11 @@ Contact: xintong@umd.edu
 
 ### Required Packages
 
-* **TensorFlow** 1.0 or greater ([instructions](https://www.tensorflow.org/install/))
+* **TensorFlow** 0.10.0 ([instructions](https://www.tensorflow.org/install/))
 * **NumPy** ([instructions](http://www.scipy.org/install.html))
+
+Newer versions of Tensorflow prevent me from doing inference with my old code and restoring my models trained using this version. However, I have a commit that supports training using TensorFlow 1.0 or greater [idd1e03e](https://github.com/xthan/polyvore/commit/dd1e03e27fab12ef0051dd2a8ba7a61caaded499)
+
 
 ### Prepare the Training Data
 Download the dataset and put it in the ./data folder:

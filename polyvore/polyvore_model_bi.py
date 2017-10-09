@@ -258,7 +258,7 @@ class PolyvoreModel(object):
         trainable=self.train_inception,
         is_training=self.is_training())
     self.inception_variables = tf.get_collection(
-        tf.GraphKeys.GLOBAL_VARIABLES, scope="InceptionV3")
+        tf.GraphKeys.VARIABLES, scope="InceptionV3")
     
     # Map inception output into embedding space.
     with tf.variable_scope("image_embedding") as scope:
@@ -310,9 +310,10 @@ class PolyvoreModel(object):
       
       # Average pooling the seq_embeddings (bag of words). 
       if self.mode != "inference":
-        seq_embeddings = tf.matmul(tf.cast(tf.expand_dims(self.cap_mask, 2),
-                                           tf.float32),
-                                   seq_embeddings)
+        seq_embeddings = tf.batch_matmul(
+                                tf.cast(tf.expand_dims(self.cap_mask, 2),
+                                        tf.float32),
+                                seq_embeddings)
         seq_embeddings = tf.squeeze(seq_embeddings, [2])
     
     self.embedding_map = embedding_map
@@ -374,7 +375,7 @@ class PolyvoreModel(object):
               tf.cast(tf.shape(norm_seq_embeddings)[0], tf.float32) ** 2)
 
       if self.config.emb_loss_factor > 0.0:
-        tf.losses.add_loss(emb_batch_loss * self.config.emb_loss_factor)
+        tf.contrib.losses.add_loss(emb_batch_loss * self.config.emb_loss_factor)
       
     # Compute image LSTM loss.
     # Start with one direction.
@@ -382,37 +383,37 @@ class PolyvoreModel(object):
     if self.config.rnn_type == "lstm":
       tf.logging.info("----- RNN Type: LSTM ------")
       # Forward LSTM.
-      f_lstm_cell = tf.contrib.rnn.BasicLSTMCell(
+      f_lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(
         num_units=self.config.num_lstm_units, state_is_tuple=True)
       # Backward LSTM.
-      b_lstm_cell = tf.contrib.rnn.BasicLSTMCell(
+      b_lstm_cell = tf.nn.rnn_cell.BasicLSTMCell(
         num_units=self.config.num_lstm_units, state_is_tuple=True)
     elif self.config.rnn_type == "gru":
       tf.logging.info("----- RNN Type: GRU ------")
       # Forward GRU.
-      f_lstm_cell = tf.contrib.rnn.GRUCell(num_units=self.config.num_lstm_units)
+      f_lstm_cell = tf.nn.rnn_cell.GRUCell(num_units=self.config.num_lstm_units)
       # Backward GRU.
-      b_lstm_cell = tf.contrib.rnn.GRUCell(num_units=self.config.num_lstm_units)
+      b_lstm_cell = tf.nn.rnn_cell.GRUCell(num_units=self.config.num_lstm_units)
     else:
       tf.logging.info("----- RNN Type: RNN ------")
       # Forward RNN.
-      f_lstm_cell = tf.contrib.rnn.BasicRNNCell(num_units=self.config.num_lstm_units)
+      f_lstm_cell = tf.nn.rnn_cell.BasicRNNCell(num_units=self.config.num_lstm_units)
       # Backward RNN.
-      b_lstm_cell = tf.contrib.rnn.BasicRNNCell(num_units=self.config.num_lstm_units)
+      b_lstm_cell = tf.nn.rnn_cell.BasicRNNCell(num_units=self.config.num_lstm_units)
    
     if self.mode == "train":
-      f_lstm_cell = tf.contrib.rnn.DropoutWrapper(
+      f_lstm_cell = tf.nn.rnn_cell.DropoutWrapper(
           f_lstm_cell,
           input_keep_prob=self.config.lstm_dropout_keep_prob,
           output_keep_prob=self.config.lstm_dropout_keep_prob)
-      b_lstm_cell = tf.contrib.rnn.DropoutWrapper(
+      b_lstm_cell = tf.nn.rnn_cell.DropoutWrapper(
           b_lstm_cell,
           input_keep_prob=self.config.lstm_dropout_keep_prob,
           output_keep_prob=self.config.lstm_dropout_keep_prob)
 
     with tf.variable_scope("lstm", initializer=self.initializer) as lstm_scope:
       if self.mode == "inference":
-        # New inference for generate loss
+        # Inference for Bi-LSTM.
         pred_feed = tf.placeholder(dtype=tf.float32,
                                    shape=[None, None],
                                    name="pred_feed")
@@ -446,19 +447,16 @@ class PolyvoreModel(object):
                                     shape=[None, self.config.embedding_size],
                                     name="b_input_feed")
                                         
-          f_state_tuple = tf.split(f_state_feed, 1, 2)
-          # f_state_tuple = tf.split(1, 2, f_state_feed)
+          f_state_tuple = tf.split(1, 2, f_state_feed)
           # Run a single LSTM step.
           with tf.variable_scope("FW"):
             f_lstm_outputs, f_state_tuple = f_lstm_cell(
                                               inputs=f_input_feed,
                                               state=f_state_tuple)
           # Concatentate the resulting state.
-          self.f_lstm_state = tf.concat(f_state_tuple, 1, name="f_state")
-          
-          
-          # b_state_tuple = tf.split(1, 2, b_state_feed)
-          b_state_tuple = tf.split(b_state_feed, 1, 2)
+          self.f_lstm_state = tf.concat(1, f_state_tuple, name="f_state")
+
+          b_state_tuple = tf.split(1, 2, b_state_feed)
 
           # Run a single LSTM step.
           with tf.variable_scope("BW"):
@@ -466,9 +464,10 @@ class PolyvoreModel(object):
                                               inputs=b_input_feed,
                                               state=b_state_tuple)
           # Concatentate the resulting state.
-          self.b_lstm_state = tf.concat(b_state_tuple, 1, name="b_state")
+          self.b_lstm_state = tf.concat(1, b_state_tuple, name="b_state")
           
         else:
+          # For non-LSTM RNN models, no tuple is used.
           # Forward
           # Placeholder for feeding a batch of concatenated states.
           f_state_feed = tf.placeholder(dtype=tf.float32,
@@ -560,7 +559,7 @@ class PolyvoreModel(object):
       f_target_embeddings = tf.reshape(f_target_embeddings,
               [self.config.number_set_images * self.config.batch_size,
                self.config.embedding_size])
-      f_target_embeddings = tf.multiply(f_target_embeddings,
+      f_target_embeddings = tf.mul(f_target_embeddings,
                                         input_mask,
                                         name="target_embeddings")
       
@@ -596,7 +595,7 @@ class PolyvoreModel(object):
       b_target_embeddings = tf.reshape(b_target_embeddings,
             [self.config.number_set_images * self.config.batch_size,
              self.config.embedding_size])
-      b_target_embeddings = tf.multiply(b_target_embeddings,
+      b_target_embeddings = tf.mul(b_target_embeddings,
                                         input_mask,
                                         name="target_embeddings")
       
@@ -618,23 +617,23 @@ class PolyvoreModel(object):
                            name="b_lstm_loss")
       
       if self.config.f_rnn_loss_factor > 0:
-        tf.losses.add_loss(f_lstm_loss * self.config.f_rnn_loss_factor)
+        tf.contrib.losses.add_loss(f_lstm_loss * self.config.f_rnn_loss_factor)
       if self.config.b_rnn_loss_factor > 0:
-        tf.losses.add_loss(b_lstm_loss * self.config.b_rnn_loss_factor)
+        tf.contrib.losses.add_loss(b_lstm_loss * self.config.b_rnn_loss_factor)
      
       # Merge all losses and stats.
-      total_loss = tf.losses.get_total_loss()
+      total_loss = tf.contrib.losses.get_total_loss()
       
       # Add summaries.
-      tf.summary.scalar("emb_batch_loss", emb_batch_loss)
-      tf.summary.scalar("f_lstm_loss", f_lstm_loss)
-      tf.summary.scalar("b_lstm_loss", b_lstm_loss)
-      tf.summary.scalar("lstm_loss",
+      tf.scalar_summary("emb_batch_loss", emb_batch_loss)
+      tf.scalar_summary("f_lstm_loss", f_lstm_loss)
+      tf.scalar_summary("b_lstm_loss", b_lstm_loss)
+      tf.scalar_summary("lstm_loss",
             (f_lstm_loss * self.config.f_rnn_loss_factor +
              b_lstm_loss * self.config.b_rnn_loss_factor))
-      tf.summary.scalar("total_loss", total_loss)
+      tf.scalar_summary("total_loss", total_loss)
       for var in tf.trainable_variables():
-        tf.summary.histogram(var.op.name, var)
+        tf.histogram_summary(var.op.name, var)
       
       weights = tf.to_float(tf.reshape(emb_loss_mask, [-1]))
     
@@ -667,7 +666,7 @@ class PolyvoreModel(object):
         initial_value=0,
         name="global_step",
         trainable=False,
-        collections=[tf.GraphKeys.GLOBAL_STEP, tf.GraphKeys.GLOBAL_VARIABLES])
+        collections=[tf.GraphKeys.GLOBAL_STEP, tf.GraphKeys.VARIABLES])
 
     self.global_step = global_step
 
