@@ -1,1 +1,1 @@
-The files in polyvore.tar.gz goes here.
+The files in polyvore.tar.gz go here.

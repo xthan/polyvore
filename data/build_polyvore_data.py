@@ -350,9 +350,9 @@ def main(unused_argv):
 
   vocab = _create_vocab(FLAGS.word_dict_file)
   # Run it!
-  # _process_dataset('valid-no-dup', FLAGS.valid_label, vocab, FLAGS.valid_shards)
-  # _process_dataset('test-no-dup', FLAGS.test_label, vocab, FLAGS.test_shards)
-  # _process_dataset('train-no-dup', FLAGS.train_label, vocab, FLAGS.train_shards)
+  _process_dataset('valid-no-dup', FLAGS.valid_label, vocab, FLAGS.valid_shards)
+  _process_dataset('test-no-dup', FLAGS.test_label, vocab, FLAGS.test_shards)
+  _process_dataset('train-no-dup', FLAGS.train_label, vocab, FLAGS.train_shards)
   
 
 if __name__ == '__main__':

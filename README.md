@@ -1,4 +1,4 @@
-## Polyvore Dataset
+## Bi-LSTM model for learning fashion compatibility. 
 Code for ACM MM'17 paper "Learning Fashion Compatibility with Bidirectional LSTMs" [[paper]](https://arxiv.org/pdf/1707.05691.pdf).
 
 Parts of the code are from an older version of Tensorflow's im2txt repo [GitHub](https://github.com/tensorflow/models/blob/master/research/im2txt).
@@ -19,6 +19,7 @@ Contact: xintong@umd.edu
 
 * **TensorFlow** 0.10.0 ([instructions](https://www.tensorflow.org/install/))
 * **NumPy** ([instructions](http://www.scipy.org/install.html))
+* **scikit-learn**
 
 Newer versions of Tensorflow prevent me from doing inference with my old code and restoring my models trained using this version. However, I have a commit that supports training using TensorFlow 1.0 or greater [idd1e03e](https://github.com/xthan/polyvore/tree/dd1e03e27fab12ef0051dd2a8ba7a61caaded499).
 
@@ -68,6 +69,7 @@ To do all three kinds of tasks mentioned in the paper. We need to first extract 
 ```
 ./extract_features.sh
 ```
+And the image features will be in data/features/test_features.pkl.
 
 You can also perform end-to-end inference by modifying the corresponding code. For example, input a sequence of images and output a compatibility score. 
 
@@ -82,15 +84,18 @@ Note that we further optimized some design choices in the released model. It can
 ./predict_compatibility.sh
 ```
 
+
+
 #### Some notes
 We found that a late fusion of different single models (Bi-LSTM w/o VSE + VSE + Siamese) can achieve superior results on all tasks.
 
 ### Todo list
 - [x] Add multiple choice inference code.
 - [x] Add compatibility prediction inference code.
-- [ ] Add image outfit generation code.
+- [ ] Add image outfit generation code. Very similar to compatibility prediction, you can try to do it yourself if in a hurry.
 - [x] Release trained models.
-- [ ]Siamese model for comparison. 
+- [ ] Release Siamese/VSE models for comparison. 
+- [ ] Polish the code.
 
 ### Citation
 
