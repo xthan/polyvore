@@ -83,8 +83,7 @@ Note that we further optimized some design choices in the released model. It can
 ```
 ./predict_compatibility.sh
 ```
-
-
+Different from the training process where the loss is calculated in each mini batch, during testing, we get the loss againist the whole test set. This is pretty slow, maybe a better method could be used (e.g., using distance between LSTM predicted representation and the target image embedding).
 
 #### Some notes
 We found that a late fusion of different single models (Bi-LSTM w/o VSE + VSE + Siamese) can achieve superior results on all tasks.
