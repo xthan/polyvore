@@ -1,5 +1,7 @@
 ## Polyvore Dataset
-Code for ACM MM'17 paper "Learning Fashion Compatibility with Bidirectional LSTMs" [[paper]](https://arxiv.org/pdf/1707.05691.pdf). Parts of the code are from an older version of Tensorflow's im2txt repo [GitHub](https://github.com/tensorflow/models/blob/master/research/im2txt).
+Code for ACM MM'17 paper "Learning Fashion Compatibility with Bidirectional LSTMs" [[paper]](https://arxiv.org/pdf/1707.05691.pdf).
+
+Parts of the code are from an older version of Tensorflow's im2txt repo [GitHub](https://github.com/tensorflow/models/blob/master/research/im2txt).
 
 
 The corresponding dataset can be found on [GitHub](https://github.com/xthan/polyvore-dataset) or [Google Drive](https://drive.google.com/drive/folders/0B4Eo9mft9jwoVDNEWlhEbUNUSE0).
@@ -35,6 +37,7 @@ python data/build_polyvore_data.py
 
 This model requires a pretrained *Inception v3* checkpoint file to initialize the network.
 
+
 This checkpoint file is provided by the
 [TensorFlow-Slim image classification library](https://github.com/tensorflow/models/tree/master/research/slim#tensorflow-slim-image-classification-library)
 which provides a suite of pre-trained image classification models. You can read
@@ -57,10 +60,10 @@ The models will be saved in model/bi_lstm
 
 ### Inference
 
-## Trained models
-Download the trained models from [Google Drive]() and put it in ./model/final_model/.
+#### Trained model
+Download the trained models from the final_model folder on [Google Drive](https://drive.google.com/drive/folders/0B4Eo9mft9jwoVDNEWlhEbUNUSE0) and put it in ./model/final_model/model.ckpt-34865.
 
-## Extract features of test data
+#### Extract features of test data
 To do all three kinds of tasks mentioned in the paper. We need to first extract the features of test images:
 ```
 ./extract_features.sh
@@ -68,21 +71,26 @@ To do all three kinds of tasks mentioned in the paper. We need to first extract 
 
 You can also perform end-to-end inference by modifying the corresponding code. For example, input a sequence of images and output a compatibility score. 
 
-## Fashion fill-in-the-blank
+#### Fashion fill-in-the-blank
 ```
 ./fill_in_blank.sh
 ```
+Note that we further optimized some design choices in the released model. It can achieve 73.5% accuracy, which is higher than the number reported in our paper.
 
-## Compatibility prediction
+#### Compatibility prediction
 ```
 ./predict_compatibility.sh
 ```
+
+#### Some notes
+We found that a late fusion of different single models (Bi-LSTM w/o VSE + VSE + Siamese) can achieve superior results on all tasks.
 
 ### Todo list
 - [x] Add multiple choice inference code.
 - [x] Add compatibility prediction inference code.
 - [ ] Add image outfit generation code.
-- [ ] Release trained models and Siamese model for comparison. 
+- [x] Release trained models.
+- [ ]Siamese model for comparison. 
 
 ### Citation
 
