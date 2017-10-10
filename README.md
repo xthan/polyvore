@@ -18,7 +18,7 @@ Contact: xintong@umd.edu
 * **TensorFlow** 0.10.0 ([instructions](https://www.tensorflow.org/install/))
 * **NumPy** ([instructions](http://www.scipy.org/install.html))
 
-Newer versions of Tensorflow prevent me from doing inference with my old code and restoring my models trained using this version. However, I have a commit that supports training using TensorFlow 1.0 or greater [idd1e03e](https://github.com/xthan/polyvore/commit/dd1e03e27fab12ef0051dd2a8ba7a61caaded499)
+Newer versions of Tensorflow prevent me from doing inference with my old code and restoring my models trained using this version. However, I have a commit that supports training using TensorFlow 1.0 or greater [idd1e03e](https://github.com/xthan/polyvore/tree/dd1e03e27fab12ef0051dd2a8ba7a61caaded499).
 
 
 ### Prepare the Training Data
@@ -55,13 +55,34 @@ rm "inception_v3_2016_08_28.tar.gz"
 ```
 The models will be saved in model/bi_lstm
 
-### Todo List
-- [ ] Add multiple choice inference code.
-- [ ] Add compatibility prediction inference code.
-- [ ] Add image outfit generation code.
-- [ ] Release trained models.
-- [ ] Get rid of older version TF APIs like tf.slice to make the code easier to read (low priority). 
+### Inference
 
+## Trained models
+Download the trained models from [Google Drive]() and put it in ./model/final_model/.
+
+## Extract features of test data
+To do all three kinds of tasks mentioned in the paper. We need to first extract the features of test images:
+```
+./extract_features.sh
+```
+
+You can also perform end-to-end inference by modifying the corresponding code. For example, input a sequence of images and output a compatibility score. 
+
+## Fashion fill-in-the-blank
+```
+./fill_in_blank.sh
+```
+
+## Compatibility prediction
+```
+./predict_compatibility.sh
+```
+
+### Todo list
+- [x] Add multiple choice inference code.
+- [x] Add compatibility prediction inference code.
+- [ ] Add image outfit generation code.
+- [ ] Release trained models and Siamese model for comparison. 
 
 ### Citation
 

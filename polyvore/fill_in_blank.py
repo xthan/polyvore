@@ -24,7 +24,6 @@ import os
 import json
 
 import tensorflow as tf
-import scipy.io as sio
 import numpy as np
 import pickle as pkl
 
@@ -229,7 +228,7 @@ def main(_):
       # Print all top-k accuracy.
       for i in range(top_k):
         print("Top %d Accuracy: " % (i + 1))
-        print("%d correct answers in %d valid question." %
+        print("%d correct answers in %d valid questions." %
                   (true_pred[i], len(all_pred)))
         print("Accuracy: %f" % (true_pred[i] / len(all_pred)))
         

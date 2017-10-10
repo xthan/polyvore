@@ -1,6 +1,5 @@
 #!/bin/bash
-# CHECKPOINT_DIR="model/bi_lstm/train/model.ckpt-0"
-CHECKPOINT_DIR="../polyvore/model_final/model_bi/train/model.ckpt-34865"
+CHECKPOINT_DIR="model/model_final/model.ckpt-34865"
 
 python polyvore/run_inference.py \
   --checkpoint_path=${CHECKPOINT_DIR} \

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Generate captions for images using default beam search parameters."""
+"""Run the inference of Bi-LSTM model given input images."""
 
 from __future__ import absolute_import
 from __future__ import division
