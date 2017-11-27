@@ -42,7 +42,7 @@ tf.flags.DEFINE_string("query_file", "",
                        "A json file containing the query to generate outfit.")
 tf.flags.DEFINE_string("result_dir", "results",
                        "Directory to save the results.")
-tf.flags.DEFINE_float("balance_factor", 0,
+tf.flags.DEFINE_float("balance_factor", 2.0,
         "Trade off between image and text input."
         "Larger balance_factor encourages higher correlation with text query")
 
