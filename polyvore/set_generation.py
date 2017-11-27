@@ -22,7 +22,6 @@ import json
 import math
 import os
 
-import scipy.io as sio
 import pickle as pkl
 import tensorflow as tf
 import numpy as np
@@ -43,7 +42,7 @@ tf.flags.DEFINE_string("query_file", "",
                        "A json file containing the query to generate outfit.")
 tf.flags.DEFINE_string("result_dir", "results",
                        "Directory to save the results.")
-tf.flags.DEFINE_float("balance_factor", 2.0,
+tf.flags.DEFINE_float("balance_factor", 0,
         "Trade off between image and text input."
         "Larger balance_factor encourages higher correlation with text query")
 
@@ -275,7 +274,6 @@ def main(_):
       queries = json.load(open(FLAGS.query_file))
       # Get the word embedding.
       [word_emb] = sess.run([model.embedding_map])
-      sio.savemat('debug.mat', {'w':word_emb})
 
       # Read word name
       words = open(FLAGS.word_dict_file).read().splitlines()
