@@ -142,7 +142,7 @@ def main(_):
       all_labels = []
       testset = open(FLAGS.label_file).read().splitlines()
       k = 0
-      for test_outfit in testset[::1000]:
+      for test_outfit in testset:
         k += 1
         if k % 100 == 0:
           print("Finish %d outfits." % k)
