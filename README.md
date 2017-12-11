@@ -99,14 +99,14 @@ where green boxes indicate the image query, and the text query is "blue".
 
 
 #### Some notes
-We found that a late fusion of different single models (Bi-LSTM w/o VSE + VSE + Siamese) can achieve superior results on all tasks.
+We found that a late fusion of different single models (Bi-LSTM w/o VSE + VSE + Siamese) can achieve superior results on all tasks. These models are also available in the same folder on  [Google Drive](https://drive.google.com/drive/folders/0B4Eo9mft9jwoVDNEWlhEbUNUSE0).
 
 ### Todo list
 - [x] Add multiple choice inference code.
 - [x] Add compatibility prediction inference code.
 - [x] Add image outfit generation code. Very similar to compatibility prediction, you can try to do it yourself if in a hurry.
 - [x] Release trained models.
-- [ ] Release Siamese/VSE models for comparison. 
+- [x] Release Siamese/VSE models.
 - [ ] Polish the code.
 
 ### Citation
