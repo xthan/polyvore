@@ -88,7 +88,7 @@ class ModelConfig(object):
     self.emb_margin = 0.2
 
     # Balance factor of all losses.
-    self.emb_loss_factor = 0.1 # VSE loss
+    self.emb_loss_factor = 1.0 # VSE loss
     self.f_rnn_loss_factor = 1.0  # Forward LSTM
     self.b_rnn_loss_factor = 1.0  # Backward LSTM, might give it a lower weight
     # because it is harder to predict backward than forward in our senario.
