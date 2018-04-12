@@ -1,7 +1,5 @@
 FROM nvidia/cuda:8.0-cudnn5-devel
 
-MAINTAINER Craig Citro <craigcitro@google.com>
-
 # Pick up some TF dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
@@ -29,6 +27,7 @@ RUN pip --no-cache-dir install \
         matplotlib \
         numpy \
         scipy \
+		scikit-learn \
         && \
     python -m ipykernel.kernelspec
 
@@ -45,22 +44,11 @@ RUN pip --no-cache-dir install \
     http://storage.googleapis.com/tensorflow/linux/gpu/tensorflow-${TENSORFLOW_VERSION}-cp27-none-linux_x86_64.whl
 # --- ~ DO NOT EDIT OR DELETE BETWEEN THE LINES --- #
 
-# Set up our notebook config.
-COPY jupyter_notebook_config.py /root/.jupyter/
-
-# Copy sample notebooks.
-COPY notebooks /notebooks
-
-# Jupyter has issues with being run directly:
-#   https://github.com/ipython/ipython/issues/7062
-# We just add a little wrapper script.
-COPY run_jupyter.sh /
-
 # TensorBoard
 EXPOSE 6006
 # IPython
 EXPOSE 8888
 
-WORKDIR "/notebooks"
+WORKDIR "/root"
 
-CMD ["/run_jupyter.sh"]
+CMD ["/bin/bash"]
