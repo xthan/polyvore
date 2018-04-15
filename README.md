@@ -17,12 +17,35 @@ Contact: xintong@umd.edu
 
 ### Required Packages
 
-* **TensorFlow** 0.10.0 ([instructions](https://www.tensorflow.org/install/))
+* **TensorFlow** ~~0.10.0~~ 0.11 ([instructions](https://www.tensorflow.org/install/))
 * **NumPy** ([instructions](http://www.scipy.org/install.html))
 * **scikit-learn**
 
 I actually used some version between r0.10 to r0.11 as the first commit of Tensorflow's im2txt, you might need to install r0.11 and modify some functions to run the code. Newer versions of Tensorflow prevent me from doing inference with my old code and restoring my models trained using this version. However, I have a commit that supports training using TensorFlow 1.0 or greater [idd1e03e](https://github.com/xthan/polyvore/tree/dd1e03e27fab12ef0051dd2a8ba7a61caaded499). I will create a new repo supporting TensorFlow version >= 1.0.
 
+
+#### Recommended Setup
+
+* [**docker-ce**](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+* [**nvidia-docker**](https://github.com/NVIDIA/nvidia-docker)
+* bulid TensorFlow image
+
+excute the below command at this repository root: 
+
+```sh
+docker build -t tensorflow:0.11 .
+```
+
+* run container
+
+```sh
+docker run -it \
+    --runtime=nvidia \
+    -p 8888:8888 \
+    -p 6006:6006 \
+    -v $CURRENT:/root/workdir \
+	tensorflow:0.11
+```
 
 ### Prepare the Training Data
 Download the dataset and put it in the ./data folder:
