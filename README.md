@@ -4,7 +4,7 @@ Code for ACM MM'17 paper "Learning Fashion Compatibility with Bidirectional LSTM
 Parts of the code are from an older version of Tensorflow's im2txt repo [GitHub](https://github.com/tensorflow/models/blob/master/research/im2txt).
 
 
-The corresponding dataset can be found on [GitHub](https://github.com/xthan/polyvore-dataset) or [Google Drive](https://drive.google.com/drive/folders/0B4Eo9mft9jwoVDNEWlhEbUNUSE0).
+The corresponding dataset can be found on [GitHub](https://github.com/xthan/polyvore-dataset) or [Google Drive](https://drive.google.com/drive/folders/0B4Eo9mft9jwoVDNEWlhEbUNUSE0?resourcekey=0-vQg9TMSLKnmPCuuWwl5Ebw&usp=sharing).
 
 ### Contact
 Author: Xintong Han
